@@ -1,10 +1,5 @@
 package main
 
-import (
-	"fmt"
-	"time"
-)
-
 type Foo struct {
 	ch1 chan struct{}
 	ch2 chan struct{}
@@ -37,6 +32,7 @@ func (f *Foo) Third(printThird func()) {
 	printThird()
 }
 
+/*
 func main() {
 	f := NewFoo()
 	go f.Third(func() { fmt.Println("Third") })
@@ -44,3 +40,4 @@ func main() {
 	go f.Second(func() { fmt.Println("Second") })
 	time.Sleep(time.Second)
 }
+*/
