@@ -31,13 +31,3 @@ func (f *Foo) Third(printThird func()) {
 	<-f.ch2
 	printThird()
 }
-
-/*
-func main() {
-	f := NewFoo()
-	go f.Third(func() { fmt.Println("Third") })
-	go f.First(func() { fmt.Println("First") })
-	go f.Second(func() { fmt.Println("Second") })
-	time.Sleep(time.Second)
-}
-*/
