@@ -1,10 +1,7 @@
 package main
 
-import "sync"
-
 type DiningPhilosophers struct {
 	forks [5]chan struct{}
-	mu    sync.Mutex
 }
 
 func NewDiningPhilosophers() *DiningPhilosophers {
@@ -17,7 +14,7 @@ func NewDiningPhilosophers() *DiningPhilosophers {
 	return dp
 }
 
-func (this *DiningPhilosophers) wantsToEat(
+func (dp *DiningPhilosophers) wantsToEat(
 	philosopher int,
 	pickLeftFork func(),
 	pickRightFork func(),
@@ -25,18 +22,25 @@ func (this *DiningPhilosophers) wantsToEat(
 	putLeftFork func(),
 	putRightFork func(),
 ) {
-	// TODO: implement your solution here
-	this.mu.Lock()
-	leftForkId := philosopher
-	rightForkId := (philosopher + 1) % 5
-	<-this.forks[leftForkId]
-	pickLeftFork()
-	<-this.forks[rightForkId]
-	pickRightFork()
+	left := philosopher
+	right := (philosopher + 1) % 5
+
+	if philosopher == 4 {
+		<-dp.forks[right]
+		pickRightFork()
+		<-dp.forks[left]
+		pickLeftFork()
+	} else {
+		<-dp.forks[left]
+		pickLeftFork()
+		<-dp.forks[right]
+		pickRightFork()
+	}
+
 	eat()
-	this.forks[leftForkId] <- struct{}{}
+
+	dp.forks[left] <- struct{}{}
+	dp.forks[right] <- struct{}{}
 	putLeftFork()
-	this.forks[rightForkId] <- struct{}{}
 	putRightFork()
-	this.mu.Unlock()
 }
